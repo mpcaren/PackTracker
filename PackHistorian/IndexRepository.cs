@@ -35,7 +35,7 @@ namespace PackTracker {
 
     void Add(Index Index) {
       if(!_index.ContainsValue(Index.Card.HDTCard.Id)) {
-        HearthDb.Card DbCard = HearthDb.Cards.GetFromDbfId(Index.Card.HDTCard.DbfIf);
+        HearthDb.Card DbCard = HearthDb.Cards.GetFromDbfId(Index.Card.HDTCard.DbfId);
 
         string name = "";
         string text = "";
@@ -45,7 +45,7 @@ namespace PackTracker {
         string locName = "";
         string locText = "";
 
-        if(Enum.TryParse(Config.Instance.SelectedLanguage, out Locale lang)) {
+        if(Enum.TryParse(Helper.GetCardLanguage(), out Locale lang)) {
           locName = DbCard.GetLocName(lang)?.ToLower();
           locText = DbCard.GetLocText(lang)?.ToLower();
         }

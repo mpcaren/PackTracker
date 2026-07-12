@@ -10,7 +10,6 @@ using Hearthstone_Deck_Tracker;
 
 namespace PackTracker.View {
   class PackNameConverter : IValueConverter {
-    static Config _config = Config.Instance;
     static Dictionary<int, Dictionary<Locale, string>> PackNames = new Dictionary<int, Dictionary<Locale, string>>() {
       {
         1, new Dictionary<Locale, string>() {
@@ -369,7 +368,7 @@ namespace PackTracker.View {
         }
       },
       {
-        1525, new Dictionary<Locale, string>() {
+        553, new Dictionary<Locale, string>() {
           { Locale.enUS, "Forged In The Barrens" },
           { Locale.enGB, "Forged In The Barrens" },
           { Locale.frFR, "Forgés dans les Tarides" },
@@ -388,6 +387,126 @@ namespace PackTracker.View {
           { Locale.thTH, "Forged In The Barrens" },
         }
       },
+      {
+        583, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Wailing Caverns" },
+          { Locale.enGB, "Wailing Caverns" },
+        }
+      },
+      {
+        602, new Dictionary<Locale, string>() {
+          { Locale.enUS, "United in Stormwind" },
+          { Locale.enGB, "United in Stormwind" },
+        }
+      },
+      {
+        603, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Golden Scholomance Academy" },
+          { Locale.enGB, "Golden Scholomance Academy" },
+        }
+      },
+      {
+        629, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Mercenaries Pack" },
+          { Locale.enGB, "Mercenaries Pack" },
+        }
+      },
+      {
+        643, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Golden Madness at the Darkmoon Faire" },
+          { Locale.enGB, "Golden Madness at the Darkmoon Faire" },
+        }
+      },
+      {
+        665, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Fractured in Alterac Valley" },
+          { Locale.enGB, "Fractured in Alterac Valley" },
+        }
+      },
+      {
+        686, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Golden Forged in the Barrens" },
+          { Locale.enGB, "Golden Forged in the Barrens" },
+        }
+      },
+      {
+        694, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Voyage to the Sunken City" },
+          { Locale.enGB, "Voyage to the Sunken City" },
+        }
+      },
+      {
+        713, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Standard Pack" },
+          { Locale.enGB, "Standard Pack" },
+        }
+      },
+      {
+        714, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Wild Pack" },
+          { Locale.enGB, "Wild Pack" },
+        }
+      },
+      {
+        716, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Golden Standard Pack" },
+          { Locale.enGB, "Golden Standard Pack" },
+        }
+      },
+      {
+        729, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Murder at Castle Nathria" },
+          { Locale.enGB, "Murder at Castle Nathria" },
+        }
+      },
+      {
+        737, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Golden United in Stormwind" },
+          { Locale.enGB, "Golden United in Stormwind" },
+        }
+      },
+      {
+        819, new Dictionary<Locale, string>() {
+          { Locale.enUS, "TITANS" },
+          { Locale.enGB, "TITANS" },
+        }
+      },
+      {
+        821, new Dictionary<Locale, string>() {
+          { Locale.enUS, "March of the Lich King" },
+          { Locale.enGB, "March of the Lich King" },
+        }
+      },
+      {
+        841, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Golden Fractured in Alterac Valley" },
+          { Locale.enGB, "Golden Fractured in Alterac Valley" },
+        }
+      },
+      {
+        854, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Festival of Legends" },
+          { Locale.enGB, "Festival of Legends" },
+        }
+      },
+      {
+        894, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Caverns of Time" },
+          { Locale.enGB, "Caverns of Time" },
+        }
+      },
+      {
+        903, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Path of Arthas" },
+          { Locale.enGB, "Path of Arthas" },
+        }
+      },
+      {
+        922, new Dictionary<Locale, string>() {
+          { Locale.enUS, "Showdown in the Badlands" },
+          { Locale.enGB, "Showdown in the Badlands" },
+        }
+      },
     };
 
     public object Convert(object value, System.Type targetType, object parameter, CultureInfo culture) {
@@ -396,7 +515,7 @@ namespace PackTracker.View {
       }
 
       if(int.TryParse(value.ToString(), out int id)) {
-        if(Enum.TryParse(_config.SelectedLanguage, out Locale lang)) {
+        if(Enum.TryParse(Helper.GetCardLanguage(), out Locale lang)) {
           string converted = Convert(id, lang);
           if(!string.IsNullOrEmpty(converted)) {
             return converted;
