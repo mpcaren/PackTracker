@@ -7,8 +7,16 @@
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableDefaultItems>true</EnableDefaultItems>
-    <HDTPath>$(LOCALAPPDATA)\HearthstoneDeckTracker\app-1.53.8</HDTPath>
+    <!-- Resolve the HDT install to build against: explicit -p:HDTPath=... wins,
+         otherwise the newest app-* folder of the local HDT installation is used. -->
+    <HDTRoot>$(LOCALAPPDATA)\HearthstoneDeckTracker</HDTRoot>
+    <_HDTDirs Condition="Exists('$(HDTRoot)')">$([System.String]::Join(';', $([System.IO.Directory]::GetDirectories('$(HDTRoot)', 'app-*'))))</_HDTDirs>
+    <HDTPath Condition="'$(HDTPath)' == '' And '$(_HDTDirs)' != ''">$(_HDTDirs.Substring($([MSBuild]::Add($(_HDTDirs.LastIndexOf(';')), 1))))</HDTPath>
   </PropertyGroup>
+  <Target Name="EnsureHDTPath" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(HDTPath)\HearthstoneDeckTracker.exe')" Text="Hearthstone Deck Tracker not found. Install HDT or pass -p:HDTPath=&lt;folder containing HearthstoneDeckTracker.exe&gt;." />
+    <Message Importance="high" Text="Building against HDT at: $(HDTPath)" />
+  </Target>
   <ItemGroup>
     <Reference Include="HearthDb">
       <HintPath>$(HDTPath)\HearthDb.dll</HintPath>
