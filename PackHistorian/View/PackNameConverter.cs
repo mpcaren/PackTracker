@@ -7,9 +7,19 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using HearthDb.Enums;
 using Hearthstone_Deck_Tracker;
+using Hearthstone_Deck_Tracker.Hearthstone;
+using PackTracker.Entity;
 
 namespace PackTracker.View {
   class PackNameConverter : IValueConverter {
+    static History _history;
+    static Dictionary<int, string> _derivedNames = new Dictionary<int, string>();
+
+    public static void SetHistory(History history) {
+      _history = history;
+      _derivedNames.Clear();
+    }
+
     static Dictionary<int, Dictionary<Locale, string>> PackNames = new Dictionary<int, Dictionary<Locale, string>>() {
       {
         1, new Dictionary<Locale, string>() {
@@ -527,9 +537,56 @@ namespace PackTracker.View {
             return PackNames[id][Locale.enUS];
           }
         }
+
+        string derived = DeriveFromHistory(id);
+        if(!string.IsNullOrEmpty(derived)) {
+          return derived;
+        }
       }
 
       return value;
+    }
+
+    // Boosters unknown to the dictionary (sets newer than the bundled HearthDb
+    // Booster enum) are named after the card set most of their cards belong to.
+    static string DeriveFromHistory(int packId) {
+      if(_derivedNames.TryGetValue(packId, out string cached)) {
+        return cached;
+      }
+
+      if(_history == null) {
+        return null;
+      }
+
+      Dictionary<CardSet, int> setCounts = new Dictionary<CardSet, int>();
+      foreach(Pack pack in _history) {
+        if(pack.Id != packId) {
+          continue;
+        }
+
+        foreach(Entity.Card card in pack.Cards) {
+          HearthDb.Card dbCard = HearthDb.Cards.GetFromDbfId(card.HDTCard.DbfId);
+          if(dbCard == null) {
+            continue;
+          }
+
+          setCounts.TryGetValue(dbCard.Set, out int count);
+          setCounts[dbCard.Set] = count + 1;
+        }
+      }
+
+      if(setCounts.Count == 0) {
+        return null;
+      }
+
+      CardSet majority = setCounts.OrderByDescending(x => x.Value).First().Key;
+      string name = HearthDbConverter.SetConverter(majority);
+      if(string.IsNullOrEmpty(name)) {
+        return null;
+      }
+
+      _derivedNames[packId] = name;
+      return name;
     }
 
     public static string Convert(int packId, Locale lang) {

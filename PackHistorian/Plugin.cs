@@ -44,6 +44,7 @@ namespace PackTracker {
       }
 
       _pityTimers = new View.Cache.PityTimerRepository(_history);
+      View.PackNameConverter.SetHistory(_history);
 
 
       //watcher
